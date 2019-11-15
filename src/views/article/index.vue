@@ -42,30 +42,85 @@
       <div slot="header" class="clearfix">
         <span>共找到59806条符合条件的内容</span>
       </div>
+      <!--
+        el-table 表格组件
+        data 表格的数组，要求是数组
+        表格组件会使用 data 数据，在内部自己进行遍历，我们不需要自己写什么 v-for
+        你只需要告诉这个表格组件：
+          data 是啥
+          表头名是什么
+          列值是什么
+        el-table-column 表格列组件
+          prop 用来指定渲染哪个数据字段
+          label 表头名称
+          width 列宽
+
+        表格列默认只能渲染普通文本，如果想要渲染点儿别的东西，需要自定义表格列。
+       -->
       <el-table
-        :data="tableData"
+        :data="articles"
         style="width: 100%">
         <el-table-column
           prop="date"
           label="封面"
           width="180">
+          <!--
+            自定义表格列
+            在 template 上声明 slot-scope="scope" ，然后就可以通过 scope.row 获取遍历项
+            scope.row 就相当于我们自己 v-for 的 item
+
+            注意：只有当你需要在自定义表格列模板中访问遍历项的时候才这么做
+           -->
+          <template slot-scope="scope">
+            <img width="50" :src="scope.row.cover.images[0]">
+          </template>
         </el-table-column>
         <el-table-column
-          prop="name"
+          prop="title"
           label="标题"
           width="180">
         </el-table-column>
         <el-table-column
-          prop="address"
+          prop="status"
           label="状态">
+          <template slot-scope="scope">
+            <!--
+              0 草稿
+              1 待审核
+              2 审核通过
+              3 审核失败
+              4 已删除
+             -->
+            <!-- <span v-show="scope.row.status === 0">草稿</span>
+            <span v-show="scope.row.status === 1">待审核</span>
+            <span v-show="scope.row.status === 2">审核通过</span>
+            <span v-show="scope.row.status === 3">审核失败</span>
+            <span v-show="scope.row.status === 4">已删除</span> -->
+
+            <!--
+              scope.row.status
+                0、1、2、3、4
+              articleStatus
+                [{ value: '草稿' }, { label: '待审核' }...]
+             -->
+            <!-- <span>{{ articleStatus[scope.row.status].label }}</span> -->
+
+            <el-tag
+              :type="articleStatus[scope.row.status].type"
+            >{{ articleStatus[scope.row.status].label }}</el-tag>
+          </template>
         </el-table-column>
         <el-table-column
-          prop="address"
+          prop="pubdate"
           label="发布日期">
         </el-table-column>
         <el-table-column
           prop="address"
           label="操作">
+          <template>
+            <el-button type="danger">删除</el-button>
+            <el-button type="primary">编辑</el-button>
+          </template>
         </el-table-column>
       </el-table>
     </el-card>
@@ -75,7 +130,8 @@
 
 <script>
 export default {
-  name: '',
+  // 建议给每个组件都起一个名字，有一些好处，例如我们可以在调试工具中根据名字搜索组件
+  name: 'article-list',
   data () {
     return {
       // 过滤数据的表单
@@ -86,50 +142,67 @@ export default {
         end_pubdate: ''
       },
       rangeDate: '',
-      tableData: [{
-        date: '2016-05-02',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-04',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1517 弄'
-      }, {
-        date: '2016-05-01',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1519 弄'
-      }, {
-        date: '2016-05-03',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1516 弄'
-      }]
+      articles: [], // 文章数据列表
+      articleStatus: [
+        {
+          type: '',
+          label: '草稿'
+        },
+        {
+          type: 'warning',
+          label: '待审核'
+        },
+        {
+          type: 'success',
+          label: '审核通过'
+        },
+        {
+          type: 'danger',
+          label: '审核失败'
+        },
+        {
+          type: 'info',
+          label: '已删除'
+        }
+      ]
     }
   },
 
   created () {
-    // 在我们的项目中，除了 /login 接口不需要 token，其它所有的接口都需要提供 token 才能请求
-    // 否则后端返回 401 错误
-    // 我们这里的后端要求把 token 放到请求头中
-    const token = window.localStorage.getItem('user-token')
+    this.loadArticles()
+  },
 
-    this.$axios({
-      method: 'GET',
-      url: '/articles',
-      headers: { // 添加请求头
-        // 名字: 值
-        // 后端要求把 token 放到请求头中，使用一个名字叫：Authorization
-        // 注意，token的格式要求：Bearer 用户token
-        // 注意！！！Bearer有个空格，多了少了都不行
-        Authorization: `Bearer ${token}`
-      }
-    }).then(res => {
-      console.log(res)
-    }).catch(err => {
-      console.log(err, '获取数据失败')
-    })
+  methods: {
+    loadArticles () {
+      // 在我们的项目中，除了 /login 接口不需要 token，其它所有的接口都需要提供 token 才能请求
+      // 否则后端返回 401 错误
+      // 我们这里的后端要求把 token 放到请求头中
+      const token = window.localStorage.getItem('user-token')
+
+      this.$axios({
+        method: 'GET',
+        url: '/articles',
+        headers: { // 添加请求头
+          // 名字: 值
+          // 后端要求把 token 放到请求头中，使用一个名字叫：Authorization
+          // 注意，token的格式要求：Bearer 用户token
+          // 注意！！！Bearer有个空格，多了少了都不行
+          Authorization: `Bearer ${token}`
+        }
+      }).then(res => {
+        this.articles = res.data.data.results
+      }).catch(err => {
+        console.log(err, '获取数据失败')
+      })
+    }
   }
 }
 </script>
 
-<style scoped>
+<style scoped lang="less">
+.article {
+  .box-card {
+    margin-bottom: 20px;
+  }
+}
 </style>

@@ -56,7 +56,6 @@ const router = new VueRouter({
 // 参数3：next，它是一个方法，用于路由放行
 // 我们具体要做的就是：判断用户的登录状态，有就通过，没有就跳转到登录页。
 router.beforeEach((to, from, next) => {
-  console.log('beforeEach 导航前')
   // 开启顶部导航进度条特效
   NProgress.start()
 
@@ -96,7 +95,6 @@ router.beforeEach((to, from, next) => {
  * 路由导航结束以后触发的钩子函数
  */
 router.afterEach((to, from) => {
-  console.log('afterEach 导航完成')
   // 结束顶部的导航进度条
   NProgress.done()
 })
