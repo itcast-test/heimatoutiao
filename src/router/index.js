@@ -47,4 +47,34 @@ const router = new VueRouter({
   routes
 })
 
+// 路由的拦截器 beforeEach 方法，该方法接收一个函数作为参数
+// 参数1：to，表示去哪里的路由信息
+// 参数2：from，表示来自哪里的路由信息
+// 参数3：next，它是一个方法，用于路由放行
+// 我们具体要做的就是：判断用户的登录状态，有就通过，没有就跳转到登录页。
+router.beforeEach((to, from, next) => {
+  console.log('所有页面的访问都要经过这里')
+
+  // 1. 如果访问的是登录页面，则直接放行
+  if (to.path === '/login') {
+    next()
+
+    // 停止代码往后执行
+    return
+  }
+
+  // 2. 非登录页面，校验登录状态
+
+  // 2.1 获取用户 token
+  const token = window.localStorage.getItem('user-token')
+
+  // 2.2 判断是否有 token，有就通过
+  if (token) {
+    next()
+  } else {
+    // 2.3 没有，就跳转到登录页
+    next('/login')
+  }
+})
+
 export default router
