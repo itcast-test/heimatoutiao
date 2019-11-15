@@ -8,17 +8,23 @@
       <el-form ref="form" label-width="80px">
         <el-form-item label="文章状态">
           <el-radio-group v-model="filterForm.status">
-            <el-radio label="全部"></el-radio>
-            <el-radio label="草稿"></el-radio>
-            <el-radio label="待审核"></el-radio>
-            <el-radio label="审核通过"></el-radio>
-            <el-radio label="审核失败"></el-radio>
+            <el-radio :label="null">全部</el-radio>
+            <el-radio label="0">草稿</el-radio>
+            <el-radio label="1">待审核</el-radio>
+            <el-radio label="2">审核通过</el-radio>
+            <el-radio label="3">审核失败</el-radio>
+            <el-radio label="4">已删除</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="频道列表">
           <el-select placeholder="请选择活动区域" v-model="filterForm.channel_id">
-            <el-option label="区域一" value="shanghai"></el-option>
-            <el-option label="区域二" value="beijing"></el-option>
+            <el-option label="全部频道" :value="null"></el-option>
+            <el-option
+              :label="channel.name"
+              :value="channel.id"
+              v-for="channel in channels"
+              :key="channel.id"
+            ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="时间选择">
@@ -26,12 +32,14 @@
             v-model="rangeDate"
             type="daterange"
             range-separator="至"
+            value-format="yyyy-MM-d"
             start-placeholder="开始日期"
-            end-placeholder="结束日期">
+            end-placeholder="结束日期"
+            @change="onDateChange">
           </el-date-picker>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary">查询</el-button>
+          <el-button type="primary" @click="loadArticles(1)">查询</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -148,10 +156,10 @@ export default {
     return {
       // 过滤数据的表单
       filterForm: {
-        status: '',
-        channel_id: '',
-        begin_pubdate: '',
-        end_pubdate: ''
+        status: null,
+        channel_id: null,
+        begin_pubdate: null,
+        end_pubdate: null
       },
       rangeDate: '',
       articles: [], // 文章数据列表
@@ -177,13 +185,15 @@ export default {
           label: '已删除'
         }
       ],
-      total: 0,
-      loading: true
+      total: 0, // 文章总记录数
+      loading: true, // 文章列表 loading
+      channels: [] // 频道列表
     }
   },
 
   created () {
     this.loadArticles(1)
+    this.loadChannels()
   },
 
   methods: {
@@ -205,7 +215,12 @@ export default {
           Authorization: `Bearer ${token}`
         },
         params: {
-          page
+          page,
+          ...this.filterForm
+          // status: this.filterForm.status,
+          // channel_id: this.filterForm.channel_id,
+          // begin_pubdate: this.filterForm.begin_pubdate,
+          // end_pubdate: this.filterForm.end_pubdate
         }
       }).then(res => {
         // 数据列表
@@ -225,6 +240,20 @@ export default {
      */
     onPageChange (page) {
       this.loadArticles(page)
+    },
+
+    loadChannels () {
+      this.$axios({
+        method: 'GET',
+        url: '/channels'
+      }).then(res => {
+        this.channels = res.data.data.channels
+      })
+    },
+
+    onDateChange (value) {
+      this.filterForm.begin_pubdate = value[0]
+      this.filterForm.end_pubdate = value[1]
     }
   }
 }
