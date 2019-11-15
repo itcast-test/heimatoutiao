@@ -10,6 +10,9 @@ import Home from '@/views/home'
 import Article from '@/views/article'
 import Publish from '@/views/publish'
 
+// 加载 nprogress
+import NProgress from 'nprogress'
+
 Vue.use(VueRouter)
 
 const routes = [
@@ -53,7 +56,14 @@ const router = new VueRouter({
 // 参数3：next，它是一个方法，用于路由放行
 // 我们具体要做的就是：判断用户的登录状态，有就通过，没有就跳转到登录页。
 router.beforeEach((to, from, next) => {
-  console.log('所有页面的访问都要经过这里')
+  // 开启顶部导航进度条特效
+  NProgress.start()
+
+  // 停止导航
+  // 我们可以在一些特殊情况下，停留在当前页面，中断当前导航
+  // next(false)
+
+  // next()
 
   // 1. 如果访问的是登录页面，则直接放行
   if (to.path === '/login') {
@@ -70,11 +80,20 @@ router.beforeEach((to, from, next) => {
 
   // 2.2 判断是否有 token，有就通过
   if (token) {
+    // 导航通过，放行，访问哪里就往哪里走
     next()
   } else {
     // 2.3 没有，就跳转到登录页
-    next('/login')
+    next('/login') // 跳转到指定路由
   }
+})
+
+/**
+ * 路由导航结束以后触发的钩子函数
+ */
+router.afterEach((to, from) => {
+  // 结束顶部的导航进度条
+  NProgress.done()
 })
 
 export default router
