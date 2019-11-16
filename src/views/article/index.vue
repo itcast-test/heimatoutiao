@@ -40,7 +40,7 @@
     <!-- 文章列表 -->
     <el-card class="box-card">
       <div slot="header" class="clearfix">
-        <span>共找到59806条符合条件的内容</span>
+        <span>共找到{{ totalCount }}条符合条件的内容</span>
       </div>
       <!--
         el-table 表格组件
@@ -125,6 +125,22 @@
       </el-table>
     </el-card>
     <!-- /文章列表 -->
+
+    <!-- 分页 -->
+    <!--
+      分页组件：
+      它默认按照 10 条每页划分页码
+      total 用来指定一共有多少条数据
+      background 背景色
+      layout 用来控制布局
+     -->
+    <el-pagination
+      background
+      layout="prev, pager, next"
+      :total="totalCount"
+      @current-change="onPageChange">
+    </el-pagination>
+    <!-- /分页 -->
   </div>
 </template>
 
@@ -164,16 +180,19 @@ export default {
           type: 'info',
           label: '已删除'
         }
-      ]
+      ],
+      totalCount: 0 // 总记录数
     }
   },
 
   created () {
-    this.loadArticles()
+    // 初始化的时候加载第 1 页数据
+    this.loadArticles(1)
   },
 
   methods: {
-    loadArticles () {
+    // 如果 page 就使用传递的，如果没传，默认就是 1
+    loadArticles (page = 1) {
       // 在我们的项目中，除了 /login 接口不需要 token，其它所有的接口都需要提供 token 才能请求
       // 否则后端返回 401 错误
       // 我们这里的后端要求把 token 放到请求头中
@@ -188,12 +207,25 @@ export default {
           // 注意，token的格式要求：Bearer 用户token
           // 注意！！！Bearer有个空格，多了少了都不行
           Authorization: `Bearer ${token}`
+        },
+        // Query 参数使用 params 传递
+        params: {
+          page, // 页码
+          per_page: 10 // 每页大小，后端按照默认 10 条每页
         }
       }).then(res => {
+        // 更新文章列表数组
         this.articles = res.data.data.results
+        // 更新总记录数
+        this.totalCount = res.data.data.total_count
       }).catch(err => {
         console.log(err, '获取数据失败')
       })
+    },
+
+    onPageChange (page) {
+      // 请求加载指定页码的文章列表
+      this.loadArticles(page)
     }
   }
 }
