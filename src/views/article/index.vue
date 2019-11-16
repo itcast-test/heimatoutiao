@@ -40,7 +40,8 @@
             type="daterange"
             range-separator="至"
             start-placeholder="开始日期"
-            end-placeholder="结束日期">
+            end-placeholder="结束日期"
+            value-format="yyyy-MM-dd">
           </el-date-picker>
         </el-form-item>
         <el-form-item>
@@ -169,11 +170,11 @@ export default {
       // 过滤数据的表单
       filterForm: {
         status: null,
-        channel_id: null,
-        begin_pubdate: '',
-        end_pubdate: ''
+        channel_id: null
+        // begin_pubdate: '',
+        // end_pubdate: ''
       },
-      rangeDate: '',
+      rangeDate: [], // 日期范围（开始时间，结束时间）
       articles: [], // 文章数据列表
       articleStatus: [
         {
@@ -236,12 +237,12 @@ export default {
         params: {
           page, // 页码
           per_page: 10, // 每页大小，后端按照默认 10 条每页
-          // axios 有个功能，当参数值为 null 的时候，它就不发送了
+          // axios 有个功能，当参数值为 null、undefined 的时候，它就不发送了
           // status: null // 文章状态
           status: this.filterForm.status, // 文章状态
-          channel_id: this.filterForm.channel_id // 频道id，不传就是所有
-          // begin_pubdate, // 开始时间
-          // end_pubdate // 结束时间
+          channel_id: this.filterForm.channel_id, // 频道id，不传就是所有
+          begin_pubdate: this.rangeDate ? this.rangeDate[0] : null, // 开始时间
+          end_pubdate: this.rangeDate ? this.rangeDate[1] : null // 结束时间
         }
       }).then(res => { // 成功执行这里
         // 更新文章列表数组
