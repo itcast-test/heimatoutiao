@@ -9,7 +9,14 @@
           <el-input v-model="article.title"></el-input>
         </el-form-item>
         <el-form-item label="内容">
-          <el-input type="textarea" v-model="article.content"></el-input>
+          <!-- <el-input type="textarea" v-model="article.content"></el-input> -->
+          <!-- bidirectional data binding（双向数据绑定） -->
+
+          <!-- 富文本编辑器 -->
+          <quill-editor v-model="article.content"
+            ref="myQuillEditor"
+            :options="editorOption">
+          </quill-editor>
         </el-form-item>
         <el-form-item label="频道">
           <el-select placeholder="请选择频道" v-model="article.channel_id">
@@ -37,8 +44,20 @@
 </template>
 
 <script>
+// 加载富文本编辑器的样式文件
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.bubble.css'
+
+// 加载富文本编辑器的核心组件
+import { quillEditor } from 'vue-quill-editor'
+
 export default {
   name: 'PublishArticle',
+  components: {
+    // 注册局部组件
+    quillEditor
+  },
   data () {
     return {
       article: {
@@ -50,7 +69,8 @@ export default {
         },
         channel_id: ''
       },
-      channels: []
+      channels: [],
+      editorOption: {} // 富文本编辑器的配置选项对象
     }
   },
 
