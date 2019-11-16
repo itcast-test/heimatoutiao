@@ -7,12 +7,17 @@
       </div>
       <el-form ref="form" label-width="80px">
         <el-form-item label="文章状态">
+          <!--
+            单选框组会把选中的 radio 的 label 同步给绑定的数据
+           -->
           <el-radio-group v-model="filterForm.status">
-            <el-radio label="全部"></el-radio>
-            <el-radio label="草稿"></el-radio>
-            <el-radio label="待审核"></el-radio>
-            <el-radio label="审核通过"></el-radio>
-            <el-radio label="审核失败"></el-radio>
+            <!-- 接口要求，不传为全部 -->
+            <el-radio :label="null">全部</el-radio>
+            <el-radio label="0">草稿</el-radio>
+            <el-radio label="1">待审核</el-radio>
+            <el-radio label="2">审核通过</el-radio>
+            <el-radio label="3">审核失败</el-radio>
+            <el-radio label="4">已删除</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="频道列表">
@@ -31,7 +36,8 @@
           </el-date-picker>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary">查询</el-button>
+          <!-- 点击查询按钮：重新发请求获取筛选数据，新查询的数据肯定从第 1 页开始 -->
+          <el-button type="primary" @click="loadArticles(1)">查询</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -154,7 +160,7 @@ export default {
     return {
       // 过滤数据的表单
       filterForm: {
-        status: '',
+        status: null,
         channel_id: '',
         begin_pubdate: '',
         end_pubdate: ''
@@ -217,7 +223,13 @@ export default {
         // Query 参数使用 params 传递
         params: {
           page, // 页码
-          per_page: 10 // 每页大小，后端按照默认 10 条每页
+          per_page: 10, // 每页大小，后端按照默认 10 条每页
+          // axios 有个功能，当参数值为 null 的时候，它就不发送了
+          // status: null // 文章状态
+          status: this.filterForm.status // 文章状态
+          // channel_id, // 频道id
+          // begin_pubdate, // 开始时间
+          // end_pubdate // 结束时间
         }
       }).then(res => { // 成功执行这里
         // 更新文章列表数组
