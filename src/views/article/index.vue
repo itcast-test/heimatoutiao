@@ -59,7 +59,8 @@
        -->
       <el-table
         :data="articles"
-        style="width: 100%">
+        style="width: 100%"
+        v-loading="loading">
         <el-table-column
           prop="date"
           label="封面"
@@ -138,7 +139,8 @@
       background
       layout="prev, pager, next"
       :total="totalCount"
-      @current-change="onPageChange">
+      @current-change="onPageChange"
+      :disabled="loading">
     </el-pagination>
     <!-- /分页 -->
   </div>
@@ -181,7 +183,8 @@ export default {
           label: '已删除'
         }
       ],
-      totalCount: 0 // 总记录数
+      totalCount: 0, // 总记录数
+      loading: true // 表格的 loading 状态
     }
   },
 
@@ -193,6 +196,9 @@ export default {
   methods: {
     // 如果 page 就使用传递的，如果没传，默认就是 1
     loadArticles (page = 1) {
+      // 加载 loading
+      this.loading = true
+
       // 在我们的项目中，除了 /login 接口不需要 token，其它所有的接口都需要提供 token 才能请求
       // 否则后端返回 401 错误
       // 我们这里的后端要求把 token 放到请求头中
@@ -213,13 +219,16 @@ export default {
           page, // 页码
           per_page: 10 // 每页大小，后端按照默认 10 条每页
         }
-      }).then(res => {
+      }).then(res => { // 成功执行这里
         // 更新文章列表数组
         this.articles = res.data.data.results
         // 更新总记录数
         this.totalCount = res.data.data.total_count
-      }).catch(err => {
+      }).catch(err => { // 失败执行这里
         console.log(err, '获取数据失败')
+      }).finally(() => { // 无论成功还是失败，最终都要执行
+        // 停止 loading
+        this.loading = false
       })
     },
 
