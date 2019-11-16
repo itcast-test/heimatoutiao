@@ -25,6 +25,7 @@
             下拉列表会把选中的 option 的 value 同步到数据中
            -->
           <el-select placeholder="请选择频道" v-model="filterForm.channel_id">
+            <el-option label="所有频道" :value="null"></el-option>
             <el-option
               :label="channel.name"
               :value="channel.id"
@@ -168,7 +169,7 @@ export default {
       // 过滤数据的表单
       filterForm: {
         status: null,
-        channel_id: '',
+        channel_id: null,
         begin_pubdate: '',
         end_pubdate: ''
       },
@@ -237,8 +238,8 @@ export default {
           per_page: 10, // 每页大小，后端按照默认 10 条每页
           // axios 有个功能，当参数值为 null 的时候，它就不发送了
           // status: null // 文章状态
-          status: this.filterForm.status // 文章状态
-          // channel_id, // 频道id
+          status: this.filterForm.status, // 文章状态
+          channel_id: this.filterForm.channel_id // 频道id，不传就是所有
           // begin_pubdate, // 开始时间
           // end_pubdate // 结束时间
         }
