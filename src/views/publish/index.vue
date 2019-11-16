@@ -12,9 +12,13 @@
           <el-input type="textarea" v-model="article.content"></el-input>
         </el-form-item>
         <el-form-item label="频道">
-          <el-select v-model="article.channel_id" placeholder="请选择活动区域">
-            <el-option label="区域一" value="shanghai"></el-option>
-            <el-option label="区域二" value="beijing"></el-option>
+          <el-select placeholder="请选择频道" v-model="article.channel_id">
+            <el-option
+              :label="channel.name"
+              :value="channel.id"
+              v-for="channel in channels"
+              :key="channel.id"
+            ></el-option>
           </el-select>
         </el-form-item>
         <!-- <el-form-item label="封面">
@@ -45,13 +49,31 @@ export default {
           images: [] // 图片，无图就是空数组即可
         },
         channel_id: ''
-      }
+      },
+      channels: []
     }
+  },
+
+  created () {
+    this.loadChannels()
   },
 
   methods: {
     onSubmit () {
       console.log('submit!')
+    },
+
+    loadChannels () {
+      // 有些接口需要 token，有些接口不需要 token
+      // 是否需要，应该由接口文档指示
+      this.$axios({
+        method: 'GET',
+        url: '/channels'
+      }).then(res => {
+        this.channels = res.data.data.channels
+      }).catch(err => {
+        console.log(err, '获取数据失败')
+      })
     }
   }
 }
