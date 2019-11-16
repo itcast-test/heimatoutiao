@@ -84,9 +84,9 @@ export default {
         method: 'POST',
         url: '/articles',
         // Headers 参数
-        headers: {
-          Authorization: `Bearer ${window.localStorage.getItem('user-token')}`
-        },
+        // headers: {
+        //   Authorization: `Bearer ${window.localStorage.getItem('user-token')}`
+        // },
         // Query 参数
         params: {
           draft

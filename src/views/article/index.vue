@@ -222,18 +222,18 @@ export default {
       // 在我们的项目中，除了 /login 接口不需要 token，其它所有的接口都需要提供 token 才能请求
       // 否则后端返回 401 错误
       // 我们这里的后端要求把 token 放到请求头中
-      const token = window.localStorage.getItem('user-token')
+      // const token = window.localStorage.getItem('user-token')
 
       this.$axios({
         method: 'GET',
         url: '/articles',
-        headers: { // 添加请求头
-          // 名字: 值
-          // 后端要求把 token 放到请求头中，使用一个名字叫：Authorization
-          // 注意，token的格式要求：Bearer 用户token
-          // 注意！！！Bearer有个空格，多了少了都不行
-          Authorization: `Bearer ${token}`
-        },
+        // headers: { // 添加请求头
+        //   // 名字: 值
+        //   // 后端要求把 token 放到请求头中，使用一个名字叫：Authorization
+        //   // 注意，token的格式要求：Bearer 用户token
+        //   // 注意！！！Bearer有个空格，多了少了都不行
+        //   Authorization: `Bearer ${token}`
+        // },
         // Query 参数使用 params 传递
         params: {
           page, // 页码
@@ -285,12 +285,12 @@ export default {
         method: 'DELETE',
         // /mp/v1_0/articles/:target
         // 注意：接口路径中的 :target 是一个路径参数，:target 是动态的，例如1、2、3，不要写 :
-        url: `/articles/${articleId}`, // 任何数据和字符串相加都会自动 toString
-        headers: {
-          // 接口中说明的 Content-Type application/json 不需要传递
-          // 因为 axios 会自动添加发送 Content-Type application/json
-          Authorization: `Bearer ${window.localStorage.getItem('user-token')}`
-        }
+        url: `/articles/${articleId}` // 任何数据和字符串相加都会自动 toString
+        // headers: {
+        //   // 接口中说明的 Content-Type application/json 不需要传递
+        //   // 因为 axios 会自动添加发送 Content-Type application/json
+        //   Authorization: `Bearer ${window.localStorage.getItem('user-token')}`
+        // }
       }).then(res => {
         // 删除成功，重新加载当前页码文章列表
         this.loadArticles(this.page)
