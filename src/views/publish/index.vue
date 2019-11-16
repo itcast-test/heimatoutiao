@@ -28,8 +28,8 @@
           </el-radio-group>
         </el-form-item> -->
         <el-form-item>
-          <el-button type="primary" @click="onSubmit">发表</el-button>
-          <el-button>存入草稿</el-button>
+          <el-button type="primary" @click="onSubmit(false)">发表</el-button>
+          <el-button @click="onSubmit(true)">存入草稿</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -59,8 +59,25 @@ export default {
   },
 
   methods: {
-    onSubmit () {
-      console.log('submit!')
+    onSubmit (draft) {
+      this.$axios({
+        method: 'POST',
+        url: '/articles',
+        // Headers 参数
+        headers: {
+          Authorization: `Bearer ${window.localStorage.getItem('user-token')}`
+        },
+        // Query 参数
+        params: {
+          draft
+        },
+        // Body 参数
+        data: this.article
+      }).then(res => {
+        console.log(res)
+      }).catch(err => {
+        console.log(err, '保存失败')
+      })
     },
 
     loadChannels () {
