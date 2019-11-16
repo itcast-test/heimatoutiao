@@ -21,9 +21,16 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="频道列表">
-          <el-select placeholder="请选择活动区域" v-model="filterForm.channel_id">
-            <el-option label="区域一" value="shanghai"></el-option>
-            <el-option label="区域二" value="beijing"></el-option>
+          <!--
+            下拉列表会把选中的 option 的 value 同步到数据中
+           -->
+          <el-select placeholder="请选择频道" v-model="filterForm.channel_id">
+            <el-option
+              :label="channel.name"
+              :value="channel.id"
+              v-for="channel in channels"
+              :key="channel.id"
+            ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="时间选择">
@@ -190,13 +197,17 @@ export default {
         }
       ],
       totalCount: 0, // 总记录数
-      loading: true // 表格的 loading 状态
+      loading: true, // 表格的 loading 状态
+      channels: [] // 频道列表
     }
   },
 
   created () {
     // 初始化的时候加载第 1 页数据
     this.loadArticles(1)
+
+    // 加载频道列表
+    this.loadChannels()
   },
 
   methods: {
@@ -247,6 +258,19 @@ export default {
     onPageChange (page) {
       // 请求加载指定页码的文章列表
       this.loadArticles(page)
+    },
+
+    loadChannels () {
+      // 有些接口需要 token，有些接口不需要 token
+      // 是否需要，应该由接口文档指示
+      this.$axios({
+        method: 'GET',
+        url: '/channels'
+      }).then(res => {
+        this.channels = res.data.data.channels
+      }).catch(err => {
+        console.log(err, '获取数据失败')
+      })
     }
   }
 }
