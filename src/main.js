@@ -44,6 +44,9 @@ axios.defaults.transformResponse = [function (data, headers) {
     // 一旦 try 里面的代码执行引发异常，那么就进入 catch 执行
     return {}
   }
+
+  // console.log(data)
+  // return JSONbig.parse(data)
 }]
 
 // 将axios共享给所有的实例使用

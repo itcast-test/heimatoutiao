@@ -200,7 +200,8 @@ export default {
       ],
       totalCount: 0, // 总记录数
       loading: true, // 表格的 loading 状态
-      channels: [] // 频道列表
+      channels: [], // 频道列表
+      page: 1 // 当前页码
     }
   },
 
@@ -258,6 +259,8 @@ export default {
     },
 
     onPageChange (page) {
+      // 记录当前最新页码
+      this.page = page
       // 请求加载指定页码的文章列表
       this.loadArticles(page)
     },
@@ -290,7 +293,7 @@ export default {
         }
       }).then(res => {
         // 删除成功，重新加载当前页码文章列表
-        this.loadArticles(1)
+        this.loadArticles(this.page)
       }).catch(err => {
         console.log(err, '删除失败')
       })
