@@ -136,7 +136,10 @@
           label="操作">
           <template slot-scope="scope">
             <el-button type="danger" @click="onDelete(scope.row.id)">删除</el-button>
-            <el-button type="primary" @click="$router.push('/publish/' + scope.row.id)">编辑</el-button>
+            <el-button
+              type="primary"
+              @click="$router.push('/publish/' + scope.row.id)"
+            >编辑</el-button>
           </template>
         </el-table-column>
       </el-table>

@@ -113,9 +113,24 @@ export default {
 
   created () {
     // this.loadChannels()
+
+    // 添加和编辑使用的都是这个组件
+    // 只有编辑才需要在初始化的时候，根据id获取加载文章的内容
+    if (this.$route.params.articleId) {
+      this.loadArticle()
+    }
   },
 
   methods: {
+    loadArticle () {
+      this.$axios({
+        method: 'GET',
+        url: `/articles/${this.$route.params.articleId}`
+      }).then(res => {
+        this.article = res.data.data
+      })
+    },
+
     onSubmit (draft) {
       this.$axios({
         method: 'POST',
