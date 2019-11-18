@@ -87,7 +87,13 @@ export default {
   components: {
     // 注册局部组件
     quillEditor,
+    // 使用的时候，可以：
+    //  <ChannelSelect></ChannelSelect>
+    //  也可以：<channel-select></channel-select>
+    // 在使用的时候我个人更喜欢小写
+    // 但是注册时候，更推荐大写
     ChannelSelect
+    // 'channel-select': ChannelSelect
   },
   data () {
     return {
