@@ -19,14 +19,39 @@
           </quill-editor>
         </el-form-item>
         <el-form-item label="频道">
-          <el-select placeholder="请选择频道" v-model="article.channel_id">
+          <!-- <el-select placeholder="请选择频道" v-model="article.channel_id">
             <el-option
               :label="channel.name"
               :value="channel.id"
               v-for="channel in channels"
               :key="channel.id"
             ></el-option>
-          </el-select>
+          </el-select> -->
+
+          <!--
+            人家这个组件 v-model 的功能和普通的 select 下拉框的功能是一样的
+            首先：
+              下拉列表的选中状态受数据影响
+              下拉列表改变，也会改变数据
+           -->
+          <!-- <el-select placeholder="请选择频道" v-model="abc">
+            <el-option label="北京" value="0"></el-option>
+            <el-option label="上海" value="1"></el-option>
+            <el-option label="广州" value="2"></el-option>
+          </el-select> -->
+
+          <!--
+            我们自己封装的频道下拉列表
+            下拉列表的选中状态受绑定数据的影响
+            下拉列表切换选中也会改变绑定的数据
+
+            一个组件上只能有一个 v-model 数据绑定
+
+            v-model 是两个语法的简写：
+              :value="article.channel_id"
+              @input="article.channel_id = 事件参数"
+          -->
+          <channel-select v-model="article.channel_id"></channel-select>
         </el-form-item>
         <!-- <el-form-item label="封面">
           <el-radio-group v-model="form.resource">
@@ -52,11 +77,17 @@ import 'quill/dist/quill.bubble.css'
 // 加载富文本编辑器的核心组件
 import { quillEditor } from 'vue-quill-editor'
 
+// 1. 加载
+import ChannelSelect from '@/components/channel-select'
+// 2. 注册
+// 3. 使用
+
 export default {
   name: 'PublishArticle',
   components: {
     // 注册局部组件
-    quillEditor
+    quillEditor,
+    ChannelSelect
   },
   data () {
     return {
@@ -67,15 +98,15 @@ export default {
           type: 0, // 封面类型 -1:自动，0-无图，1-1张，3-3张
           images: [] // 图片，无图就是空数组即可
         },
-        channel_id: ''
+        channel_id: 4
       },
-      channels: [],
+      // channels: [],
       editorOption: {} // 富文本编辑器的配置选项对象
     }
   },
 
   created () {
-    this.loadChannels()
+    // this.loadChannels()
   },
 
   methods: {
@@ -98,23 +129,26 @@ export default {
       }).catch(err => {
         console.log(err, '保存失败')
       })
-    },
-
-    loadChannels () {
-      // 有些接口需要 token，有些接口不需要 token
-      // 是否需要，应该由接口文档指示
-      this.$axios({
-        method: 'GET',
-        url: '/channels'
-      }).then(res => {
-        this.channels = res.data.data.channels
-      }).catch(err => {
-        console.log(err, '获取数据失败')
-      })
     }
+
+    // loadChannels () {
+    //   // 有些接口需要 token，有些接口不需要 token
+    //   // 是否需要，应该由接口文档指示
+    //   this.$axios({
+    //     method: 'GET',
+    //     url: '/channels'
+    //   }).then(res => {
+    //     this.channels = res.data.data.channels
+    //   }).catch(err => {
+    //     console.log(err, '获取数据失败')
+    //   })
+    // }
   }
 }
 </script>
 
-<style scoped>
+<style>
+.ql-editor {
+  min-height: 300px;
+}
 </style>

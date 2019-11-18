@@ -56,6 +56,7 @@ axios.interceptors.request.use(function (config) {
   // 我们可以在拦截器中对 config 进行统一配置定制
   console.log('请求拦截器', config)
 
+  // 获取本地存储中的 token
   const token = window.localStorage.getItem('user-token')
 
   // 统一添加 token

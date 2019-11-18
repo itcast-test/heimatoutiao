@@ -24,7 +24,7 @@
           <!--
             下拉列表会把选中的 option 的 value 同步到数据中
            -->
-          <el-select placeholder="请选择频道" v-model="filterForm.channel_id">
+          <!-- <el-select placeholder="请选择频道" v-model="filterForm.channel_id">
             <el-option label="所有频道" :value="null"></el-option>
             <el-option
               :label="channel.name"
@@ -32,7 +32,8 @@
               v-for="channel in channels"
               :key="channel.id"
             ></el-option>
-          </el-select>
+          </el-select> -->
+          <channel-select v-model="filterForm.channel_id"></channel-select>
         </el-form-item>
         <el-form-item label="时间选择">
           <el-date-picker
@@ -162,9 +163,14 @@
 </template>
 
 <script>
+import ChannelSelect from '@/components/channel-select'
+
 export default {
   // 建议给每个组件都起一个名字，有一些好处，例如我们可以在调试工具中根据名字搜索组件
   name: 'article-list',
+  components: {
+    ChannelSelect
+  },
   data () {
     return {
       // 过滤数据的表单
@@ -200,7 +206,7 @@ export default {
       ],
       totalCount: 0, // 总记录数
       loading: true, // 表格的 loading 状态
-      channels: [], // 频道列表
+      // channels: [], // 频道列表
       page: 1 // 当前页码
     }
   },
@@ -210,7 +216,7 @@ export default {
     this.loadArticles(1)
 
     // 加载频道列表
-    this.loadChannels()
+    // this.loadChannels()
   },
 
   methods: {
@@ -258,6 +264,11 @@ export default {
       })
     },
 
+    // 该函数是分页组件的 current-change 事件处理函数
+    // 该函数也不是我们调用的，我们只是写了里面的业务代码
+    // current-change 事件：当页码改变的时候，分页组件会调用这个方法
+    // 分页组件在调用的时候，会把当前页码传递给这个方法
+    // 我们这里要做的就是声明一个参数接收使用即可
     onPageChange (page) {
       // 记录当前最新页码
       this.page = page
@@ -265,18 +276,18 @@ export default {
       this.loadArticles(page)
     },
 
-    loadChannels () {
-      // 有些接口需要 token，有些接口不需要 token
-      // 是否需要，应该由接口文档指示
-      this.$axios({
-        method: 'GET',
-        url: '/channels'
-      }).then(res => {
-        this.channels = res.data.data.channels
-      }).catch(err => {
-        console.log(err, '获取数据失败')
-      })
-    },
+    // loadChannels () {
+    //   // 有些接口需要 token，有些接口不需要 token
+    //   // 是否需要，应该由接口文档指示
+    //   this.$axios({
+    //     method: 'GET',
+    //     url: '/channels'
+    //   }).then(res => {
+    //     this.channels = res.data.data.channels
+    //   }).catch(err => {
+    //     console.log(err, '获取数据失败')
+    //   })
+    // },
 
     onDelete (articleId) {
       // 这里报 400 错，是因为数据 id 的问题
