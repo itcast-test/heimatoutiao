@@ -22,7 +22,7 @@
           <template slot="title">内容管理</template>
           <el-menu-item index="/publish">发布文章</el-menu-item>
           <el-menu-item index="/article">内容列表</el-menu-item>
-          <el-menu-item>评论列表</el-menu-item>
+          <el-menu-item index="/comment">评论管理</el-menu-item>
           <el-menu-item>素材管理</el-menu-item>
         </el-submenu>
         <!-- 二级菜单 -->
@@ -44,7 +44,9 @@
       </el-header>
       <el-main>
         <!-- 二级路由容器，子路由会渲染到这里 -->
-        <router-view></router-view>
+        <!-- 只需要在 router-view 上增加一个 key，就可以禁用路由缓存功能 -->
+        <!-- 绑定的 key 唯一即可 -->
+        <router-view :key="$route.path"></router-view>
       </el-main>
     </el-container>
   </el-container>

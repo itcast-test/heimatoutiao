@@ -54,7 +54,7 @@ axios.interceptors.request.use(function (config) {
   // 在请求拦截器函数中的 config 是本次请求相关的配置对象
   // config 就是最后要发给后端的那个配置对象
   // 我们可以在拦截器中对 config 进行统一配置定制
-  console.log('请求拦截器', config)
+  // console.log('请求拦截器', config)
 
   // 获取本地存储中的 token
   const token = window.localStorage.getItem('user-token')
@@ -75,7 +75,7 @@ axios.interceptors.request.use(function (config) {
 axios.interceptors.response.use(function (response) {
   // Any status code that lie within the range of 2xx cause this function to trigger
   // Do something with response data
-  console.log('响应拦截器')
+  // console.log('响应拦截器')
   return response
 }, function (error) {
   // Any status codes that falls outside the range of 2xx cause this function to trigger

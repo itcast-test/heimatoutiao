@@ -170,7 +170,7 @@ import ChannelSelect from '@/components/channel-select'
 
 export default {
   // 建议给每个组件都起一个名字，有一些好处，例如我们可以在调试工具中根据名字搜索组件
-  name: 'article-list',
+  name: 'ArticleIndex',
   components: {
     ChannelSelect
   },
@@ -215,6 +215,7 @@ export default {
   },
 
   created () {
+    // console.log('article created')
     // 初始化的时候加载第 1 页数据
     this.loadArticles(1)
 
