@@ -6,6 +6,7 @@ import 'element-ui/lib/theme-chalk/index.css'
 import './styles/index.less'
 import axios from 'axios'
 import JSONbig from 'json-bigint'
+import moment from 'moment'
 
 // 加载 nprogress 中的指定的样式文件
 // 注意：加载第三方包中的具体文件不需要写具体路径，直接写包名即可
@@ -96,6 +97,31 @@ Vue.use(Element, {
   // 项目中所有拥有 size 属性的组件的默认尺寸均为 'small'
   size: 'small'
 })
+
+// 全局过滤器：任何组件模板都可以直接访问
+// 参数1：过滤器名称
+// 参数2：函数
+// 调用方式：在模板中 {{ 数据 | 过滤器 }}
+// | 管道符前面的数据就会作为参数传递给过滤器函数
+// 过滤器函数的第1个参数始终是
+// value、format 是形参，它就是我随便起的一个名字
+// Vue 在1.x 的时候有很多内置的过滤器
+// Vue 升级版本 2 的时候移除了所有的内置过滤器
+// 但是保留了过滤器的功能
+// 用户还可以继续自定义添加过滤器来使用
+// 强调：处理一些简单的文本格式化
+Vue.filter('dateFormat', (value, format = 'YYYY-MM-DD') => {
+  return moment(value).format(format)
+})
+
+// function add(x = 20, y = 10) {
+//   // 10 10
+// }
+
+// add(10)
+// add(10, 20) // 10, 20
+// add() // 20, 10
+// add(, 50) // 20, 50
 
 Vue.config.productionTip = false
 

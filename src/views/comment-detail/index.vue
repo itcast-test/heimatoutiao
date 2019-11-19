@@ -38,6 +38,25 @@
           prop="pubdate"
           label="评论日期"
           width="180">
+          <template slot-scope="scope">
+            <!--
+              不传参：{{ scope.row.pubdate | dateFormat }}
+              传参：{{ scope.row.pubdate | dateFormat(参数) }}
+             -->
+            {{ scope.row.pubdate | dateFormat('YYYY-MM-DD') }}
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="是否推荐"
+          width="180">
+          <template slot-scope="scope">
+            <el-switch
+              v-model="scope.row.is_top"
+              active-color="#13ce66"
+              inactive-color="#ff4949"
+              @change="onTop(scope.row)">
+            </el-switch>
+          </template>
         </el-table-column>
         <el-table-column
           prop="reply_count"
@@ -50,7 +69,7 @@
 </template>
 
 <script>
-import moment from 'moment'
+// import moment from 'moment'
 
 export default {
   name: 'CommentDetail',
@@ -72,6 +91,19 @@ export default {
   computed: {},
   watch: {
   },
+  // 实例选项：过滤器
+  //  全局：任何组件都可以
+  //  局部：只能用在当前组件使用
+  // 它的作用就是：常用语一些简单的文本格式化，例如日期格式化处理
+  // 过滤器函数可以直接在模板中调用
+  // 调用方式：{{ 数据 | 过滤器函数 }}
+  // filters: {
+  //   dateFormat (value) {
+  //     console.log('dateFormat 被调用了')
+  //     return moment(value).format('YYYY-MM-DD')
+  //   }
+  // },
+
   created () {
     this.loadComments()
   },
@@ -87,16 +119,32 @@ export default {
       }).then(res => {
         const comments = res.data.data.results
 
-        comments.forEach(item => {
-          // moment(指定时间).format('格式')
-          item.pubdate = moment(item.pubdate).format('YYYY-MM-DD')
-        })
+        // comments.forEach(item => {
+        //   // moment(指定时间).format('格式')
+        //   item.pubdate = moment(item.pubdate).format('YYYY-MM-DD')
+        // })
 
         // 将处理之后的数据更新到组件中
         this.comments = comments
       }).catch(err => {
         console.log(err)
         this.$message.error('获取数据失败')
+      })
+    },
+
+    onTop (comment) {
+      this.$axios({
+        method: 'PUT',
+        url: `/comments/${comment.com_id}/sticky`,
+        data: {
+          // comment.is_top 双向绑定给了开关按钮
+          // 所以获取 comment.is_top 就是在获取开关的状态
+          sticky: comment.is_top
+        }
+      }).then(res => {
+        this.$message('操作成功')
+      }).catch(err => {
+        this.$message.error('操作失败', err)
       })
     }
   }
