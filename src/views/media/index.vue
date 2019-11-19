@@ -28,6 +28,18 @@
         >
           <el-button size="small" type="primary">点击上传</el-button>
         </el-upload>
+
+        <el-button
+          style="float: right; margin-right: 10px;"
+          type="success"
+          @click="onUpload"
+        >自己请求上传图片</el-button>
+
+        <!--
+          表单元素有个属性叫 hidden，可以隐藏它
+          file 类型的 input 的 change 事件，当选择文件发生改变的时候触发
+         -->
+        <input type="file" hidden ref="file" @change="onFileChange">
       </div>
       <div style="margin-bottom: 20px;">
         <el-radio-group v-model="type" @change="onFind">
@@ -187,6 +199,49 @@ export default {
     onUploadSuccess () {
       // 刷新图片列表
       this.loadImages(this.type !== '全部')
+    },
+
+    onUpload () {
+      // 手动触发 DOM 的点击事件
+      this.$refs.file.click()
+    },
+
+    onFileChange () {
+      // 获取用户选择的那个文件对象
+      const fileObj = this.$refs.file.files[0]
+
+      // 创建一个表单数据对象
+      const formData = new FormData()
+
+      // 手动往表单数据中添加成员
+      formData.append('image', fileObj)
+
+      // 请求上传
+      this.$axios({
+        method: 'POST',
+        url: '/user/images',
+        // 我们常见的两种 Content-Type
+        // application/json axios默认会设置
+        // multipart/form-data 常用语文件上传
+        // 错误的写法
+
+        // 如果你提交的 data 是一个普通对象，axios 会自动把 Content-Type 设置为 application/json
+        // data: {
+        //   image: fileObj
+        // }
+
+        // 我们这里接口要求 Content-Type 为 multipart/form-data，所以需要使用 FormData 对象
+        // 如果 data 提供的是一个 FormData ，那么 axios 会把  Content-Type 设置为 multipart/form-data
+        data: formData
+      }).then(res => {
+        console.log(res)
+
+        // 上传成功，更新数据列表
+        this.loadImages(this.type !== '全部')
+      }).catch(err => {
+        console.log(err)
+        this.$message.error('上传失败')
+      })
     }
   }
 }
