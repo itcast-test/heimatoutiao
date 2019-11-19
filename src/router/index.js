@@ -12,6 +12,7 @@ import Publish from '@/views/publish'
 import Comment from '@/views/comment'
 import CommentDetail from '@/views/comment-detail'
 import Media from '@/views/media'
+import Account from '@/views/account'
 
 // 加载 nprogress
 import NProgress from 'nprogress'
@@ -62,6 +63,10 @@ const routes = [
       {
         path: '/media',
         component: Media
+      },
+      {
+        path: '/account',
+        component: Account
       }
     ]
   },
