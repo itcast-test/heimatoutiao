@@ -23,7 +23,7 @@
           <el-menu-item index="/publish">发布文章</el-menu-item>
           <el-menu-item index="/article">内容列表</el-menu-item>
           <el-menu-item index="/comment">评论管理</el-menu-item>
-          <el-menu-item>素材管理</el-menu-item>
+          <el-menu-item index="/media">素材管理</el-menu-item>
         </el-submenu>
         <!-- 二级菜单 -->
         <el-submenu index="2">

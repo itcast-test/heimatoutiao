@@ -11,6 +11,7 @@ import Article from '@/views/article'
 import Publish from '@/views/publish'
 import Comment from '@/views/comment'
 import CommentDetail from '@/views/comment-detail'
+import Media from '@/views/media'
 
 // 加载 nprogress
 import NProgress from 'nprogress'
@@ -57,6 +58,10 @@ const routes = [
         // 将路由参数映射给组件的 prosp 数据，这样获取参数更方便
         // 参考文档：https://router.vuejs.org/zh/guide/essentials/passing-props.html
         props: true
+      },
+      {
+        path: '/media',
+        component: Media
       }
     ]
   },
