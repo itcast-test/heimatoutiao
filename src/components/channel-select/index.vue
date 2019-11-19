@@ -28,6 +28,12 @@
       :value="value"
       @input="$emit('input', $event)"
     >
+      <!-- 这个选项的 value 必须提供为 null -->
+      <el-option
+        v-if="includeAll"
+        :value="null"
+        label="全部频道"
+      ></el-option>
       <el-option
         :label="channel.name"
         :value="channel.id"
@@ -46,6 +52,12 @@ export default {
     value: {
       type: [String, Number],
       require: true
+    },
+    // 不推荐
+    // 'not-include-all': {}
+    includeAll: {
+      type: Boolean,
+      default: true
     }
   },
   data () {

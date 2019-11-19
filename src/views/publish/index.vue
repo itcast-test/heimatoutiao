@@ -51,7 +51,10 @@
               :value="article.channel_id"
               @input="article.channel_id = 事件参数"
           -->
-          <channel-select v-model="article.channel_id"></channel-select>
+          <channel-select
+            v-model="article.channel_id"
+            :include-all="false"
+          ></channel-select>
         </el-form-item>
         <!-- <el-form-item label="封面">
           <el-radio-group v-model="form.resource">
