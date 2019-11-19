@@ -50,6 +50,8 @@
 </template>
 
 <script>
+import moment from 'moment'
+
 export default {
   name: 'CommentDetail',
   components: {},
@@ -83,7 +85,15 @@ export default {
           source: this.articleId // 文章id 或 评论id
         }
       }).then(res => {
-        this.comments = res.data.data.results
+        const comments = res.data.data.results
+
+        comments.forEach(item => {
+          // moment(指定时间).format('格式')
+          item.pubdate = moment(item.pubdate).format('YYYY-MM-DD')
+        })
+
+        // 将处理之后的数据更新到组件中
+        this.comments = comments
       }).catch(err => {
         console.log(err)
         this.$message.error('获取数据失败')
