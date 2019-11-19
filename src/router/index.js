@@ -10,6 +10,7 @@ import Home from '@/views/home'
 import Article from '@/views/article'
 import Publish from '@/views/publish'
 import Comment from '@/views/comment'
+import CommentDetail from '@/views/comment-detail'
 
 // 加载 nprogress
 import NProgress from 'nprogress'
@@ -49,6 +50,13 @@ const routes = [
       {
         path: '/comment',
         component: Comment
+      },
+      {
+        path: '/comment/:articleId',
+        component: CommentDetail,
+        // 将路由参数映射给组件的 prosp 数据，这样获取参数更方便
+        // 参考文档：https://router.vuejs.org/zh/guide/essentials/passing-props.html
+        props: true
       }
     ]
   },
@@ -59,6 +67,9 @@ const routes = [
   }
 ]
 
+// Vue 为了你更方便的访问到路由实例
+// 它把这个 router 起了个名字叫 $router 放到了 Vue 原型对象中了
+// 所以说你在组件中访问的 this.$router 就是这里我们 new 出来的 VueRouter 实例
 const router = new VueRouter({
   routes
 })
@@ -68,6 +79,7 @@ const router = new VueRouter({
 // 参数2：from，表示来自哪里的路由信息
 // 参数3：next，它是一个方法，用于路由放行
 // 我们具体要做的就是：判断用户的登录状态，有就通过，没有就跳转到登录页。
+// to、from 都是一个 $route 对象，其中包括https://router.vuejs.org/zh/api/#%E8%B7%AF%E7%94%B1%E5%AF%B9%E8%B1%A1%E5%B1%9E%E6%80%A7数据
 router.beforeEach((to, from, next) => {
   // 开启顶部导航进度条特效
   NProgress.start()

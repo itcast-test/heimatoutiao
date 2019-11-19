@@ -21,12 +21,12 @@
     <!-- <el-select
       placeholder="请选择频道"
       :value="value"
-      @input="$emit('input', $event)"
+      @input="onInput"
     > -->
     <el-select
       placeholder="请选择频道"
       :value="value"
-      @input="onInput"
+      @input="$emit('input', $event)"
     >
       <el-option
         :label="channel.name"
