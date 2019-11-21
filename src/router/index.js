@@ -13,6 +13,7 @@ import Comment from '@/views/comment'
 import CommentDetail from '@/views/comment-detail'
 import Media from '@/views/media'
 import Account from '@/views/account'
+import EchartsDemo from '@/views/echarts-demo'
 
 // 加载 nprogress
 import NProgress from 'nprogress'
@@ -67,6 +68,10 @@ const routes = [
       {
         path: '/account',
         component: Account
+      },
+      {
+        path: '/echarts-demo',
+        component: EchartsDemo
       }
     ]
   },
