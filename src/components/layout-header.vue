@@ -45,6 +45,7 @@ export default {
 
     // 在初始化中监听自定义事件
     eventBus.$on('update-user', user => {
+      console.log('header 中的订阅执行了')
       // this.user = user
       this.user.name = user.name
       this.user.photo = user.photo

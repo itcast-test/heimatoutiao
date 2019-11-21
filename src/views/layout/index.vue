@@ -53,10 +53,17 @@
 </template>
 <script>
 import layoutHeader from '../../components/layout-header.vue'
+import eventBus from '@/utils/event-bus'
+
 export default {
   name: 'home',
   components: {
     'layout-header': layoutHeader
+  },
+  created () {
+    eventBus.$on('update-user', () => {
+      console.log('layout 中订阅的 update-user 执行了')
+    })
   }
 }
 </script>
