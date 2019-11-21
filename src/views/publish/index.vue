@@ -63,11 +63,12 @@
             <el-radio :label="0">无图</el-radio>
             <el-radio :label="-1">自动</el-radio>
           </el-radio-group>
-          <template v-if="article.cover.type >= 0">
-            <UploadImage
-              v-for="item in article.cover.type"
-              :key="item"
-            ></UploadImage>
+          <template v-if="article.cover.type > 0">
+            <el-row :gutter="20">
+              <el-col :span="4" v-for="item in article.cover.type" :key="item">
+                <UploadImage></UploadImage>
+              </el-col>
+            </el-row>
           </template>
         </el-form-item>
         <el-form-item>
