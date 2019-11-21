@@ -65,8 +65,22 @@
           </el-radio-group>
           <template v-if="article.cover.type > 0">
             <el-row :gutter="20">
-              <el-col :span="4" v-for="item in article.cover.type" :key="item">
-                <UploadImage></UploadImage>
+              <el-col :span="4" v-for="(item, index) in article.cover.type" :key="item">
+                <!--
+                  <UploadImage v-model="article.cover.images[0]"></UploadImage>
+                    它得把选择的图片同步到数组的第1项
+                  <UploadImage v-model="article.cover.images[1]"></UploadImage>
+                    它得把选择的图片同步到数组的第2项
+                  <UploadImage v-model="article.cover.images[2]"></UploadImage>
+                    它得把选择的图片同步到数组的第3项
+
+                  完整写法：
+                    :value="article.cover.images[0]"
+                    @input="article.cover.images[0] = 事件参数"
+                 -->
+                <UploadImage
+                  v-model="article.cover.images[index]"
+                ></UploadImage>
               </el-col>
             </el-row>
           </template>

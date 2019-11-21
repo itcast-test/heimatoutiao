@@ -78,7 +78,6 @@
                 }"
                 @click="onCollect(item)"
               ></i>
-
               <!-- class 本来就是绑定数据字符串 -->
               <!-- <i :class="item.is_collected ? 'el-icon-star-on': 'el-icon-star-off'"></i> -->
               <i class="el-icon-delete-solid" @click="onDelete(item)"></i>
